@@ -73,7 +73,7 @@ class UsuarioController
             return;
         }
 
-        if (!$filter_var($email, FILTER_VALIDADE_EMAIL)){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
             http_response_code(400);
             echo json_encode(['erro' => 'Email inválido']);
             return;
