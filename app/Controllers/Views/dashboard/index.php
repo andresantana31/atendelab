@@ -29,20 +29,20 @@
             <p class="mb-1">
                 Bem-vindo,
                 <strong>
-                    <?= htmlspecialchars{
+                    <?= htmlspecialchars(
                         $usuario['nome'],
                         ENT_QUOTES,
                         'UTF-8'
-                    }?>
+                    )?>
                 </strong>
             </p>
             <p class="text-muted">
                 Perfil:
-                    <?= htmlspecialchars{
+                    <?= htmlspecialchars(
                         $usuario['nome'],
                         ENT_QUOTES,
                         'UTF-8'
-                    }?>
+                    )?>
             </p>
 
             <a class="btn btn-primary"
