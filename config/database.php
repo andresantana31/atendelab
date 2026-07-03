@@ -10,7 +10,7 @@ try {
  $user,
  $password
  );
- echo 'Conexão com o banco realizada com sucesso!';
+ //echo 'Conexão com o banco realizada com sucesso!';
 
  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {

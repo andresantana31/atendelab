@@ -9,7 +9,7 @@ function usuarioAutenticado(): bool
         && is_array($_SESSION['usuario']);
 }
 
-function exigirAutenticao(): void
+function exigirAutenticacao(): void
 {
     if (!usuarioAutenticado()){
         $_SESSION['mensagem'] =

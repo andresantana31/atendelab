@@ -1,6 +1,6 @@
 <?php
 
-class PessoaController
+class PessoasController
 {
 
     private PDO $pdo;
@@ -175,8 +175,8 @@ class PessoaController
             echo json_encode(['erro' => 'Erro ao atualizar pessoa.']);
         }
     }
-    
-    public function excluir(): void
+    //igual o parametro do excluir
+    public function inativar(): void
     {
         header('Content-Type: application/json; charset=utf-8');
 
@@ -189,15 +189,18 @@ class PessoaController
         }
 
         try {
-            $sql = 'DELETE FROM pessoas WHERE id = :id';
+            $sql = 'UPDATE pessoas SET status = :status WHERE id = :id';
+
             $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':status', 'inativo');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(['mensagem' => 'Pessoa excluída com sucesso.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['mensagem' => 'Pessoa inativada com sucesso.'], JSON_UNESCAPED_UNICODE);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao excluir pessoa.']);
+            echo json_encode(['erro' => 'Erro ao inativar pessoa.']);
         }
     }
+
 }

@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/Middleware/auth.php';
+require_once __DIR__ . '/../Middleware/auth.php';
 
 class AuthController
 {
@@ -25,7 +25,7 @@ class AuthController
 
         unset($_SESSION['erro_login'], $_SESSION['mensagem']);
 
-        require __DIR__ . '/Views/auth/login.php';
+        require __DIR__ . '/../Views/auth/login.php';
     }
 
     public function entrar(): void
@@ -88,9 +88,9 @@ class AuthController
 
     public function dashboard(): void
     {
-        exigirAutenticao();
-
-        require __DIR__ . '/Views/dashboard/index.php';
+        exigirAutenticacao();
+        $usuario = $_SESSION['usuario'];
+        require __DIR__ . '/../Views/dashboard/index.php';
     }
 
     public function logout(): void

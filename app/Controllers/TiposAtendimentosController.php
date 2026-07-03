@@ -1,6 +1,6 @@
 <?php
 
-class TipoAtendimentoController
+class TiposAtendimentosController
 {
 
     private PDO $pdo;
@@ -138,8 +138,7 @@ class TipoAtendimentoController
             echo json_encode(['erro' => 'Erro ao atualizar tipo de atendimento.']);
         }
     }
-
-    public function excluir(): void
+    public function inativar(): void
     {
         header('Content-Type: application/json; charset=utf-8');
 
@@ -152,15 +151,17 @@ class TipoAtendimentoController
         }
 
         try {
-            $sql = 'DELETE FROM tipos_atendimentos WHERE id = :id';
+            $sql = 'UPDATE tipos_atendimentos SET status = :status WHERE id = :id';
+
             $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':status', 'inativo');
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
-            echo json_encode(['mensagem' => 'Tipo de atendimento excluído com sucesso.'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['mensagem' => 'Tipo de atendimento inativado com sucesso.'], JSON_UNESCAPED_UNICODE);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode(['erro' => 'Erro ao excluir tipo de atendimento.']);
+            echo json_encode(['erro' => 'Erro ao inativar tipo de atendimento.']);
         }
     }
 }

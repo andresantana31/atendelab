@@ -1,16 +1,45 @@
 <?php
 
 require_once __DIR__ . '/app/Controllers/UsuarioController.php';
-require_once __DIR__ . '/app/Controllers/TipoAtendimentoController.php';
-require_once __DIR__ . '/app/Controllers/PessoaController.php';
-require_once __DIR__ . '/app/Controllers/AtendimentoController.php';
+require_once __DIR__ . '/app/Controllers/TiposAtendimentosController.php';
+require_once __DIR__ . '/app/Controllers/PessoasController.php';
+require_once __DIR__ . '/app/Controllers/AtendimentosController.php';
 require_once __DIR__ . '/app/Controllers/AuthController.php';
-require_once __DIR__ . '/app/Controllers/Middleware/auth.php';
+require_once __DIR__ . '/app/Middleware/auth.php';
+require_once __DIR__ . '/app/Controllers/FrontendController.php';
 
 $controller = $_GET['controller'] ?? 'auth';
 $action     = $_GET['action']     ?? 'login';
 
 switch ($controller) {
+
+    case 'frontend':
+
+        exigirAutenticacao();
+
+        $frontendController = new FrontendController();
+
+        switch ($action) {
+
+            case 'pessoas':
+                $frontendController->pessoas();
+                break;
+
+            case 'tipos':
+                $frontendController->tiposAtendimentos();
+                break;
+
+            case 'atendimentos':
+                $frontendController->atendimentos();
+                break;
+
+            default:
+                http_response_code(404);
+                echo 'Ação de frontend não encontrada';
+                break;
+        }
+
+        break;
 
     case 'auth':
 
@@ -44,7 +73,7 @@ switch ($controller) {
 
     case 'usuario':
 
-        exigirAutenticao();
+        exigirAutenticacao();
 
         $usuarioController = new UsuarioController();
 
@@ -66,10 +95,6 @@ switch ($controller) {
                 $usuarioController->atualizar();
                 break;
 
-            case 'excluir':
-                $usuarioController->excluir();
-                break;
-
             default:
                 http_response_code(404);
                 echo 'Ação de usuários não encontrada';
@@ -78,68 +103,59 @@ switch ($controller) {
 
         break;
 
-    case 'tipo_atendimento':
-
-        exigirAutenticao();
-
-        $tipoAtendimentoController = new TipoAtendimentoController();
+    case 'tipos':
+        exigirAutenticacao();
+        require_once __DIR__ . '/app/Controllers/TiposAtendimentosController.php';
+        $tiposController = new TiposAtendimentosController();
 
         switch ($action) {
-
             case 'listar':
-                $tipoAtendimentoController->listar();
+                $tiposController->listar();
                 break;
-
             case 'buscar':
-                $tipoAtendimentoController->buscarPorId();
+                $tiposController->buscarPorId();
                 break;
-
             case 'criar':
-                $tipoAtendimentoController->criar();
+                $tiposController->criar();
                 break;
-
             case 'atualizar':
-                $tipoAtendimentoController->atualizar();
+                $tiposController->atualizar();
                 break;
-
-            case 'excluir':
-                $tipoAtendimentoController->excluir();
+            case 'inativar':
+                $tiposController->inativar();
                 break;
-
             default:
-                http_response_code(404);
-                echo 'Ação de tipos de atendimento não encontrada';
-                break;
+                responderRotaNaoEncontrada('Ação de tipos de atendimento não encontrada.');
         }
+        break;
 
         break;
 
-    case 'pessoa':
+    case 'pessoas':
 
-        exigirAutenticao();
+        exigirAutenticacao();
 
-        $pessoaController = new PessoaController();
+        $PessoasController = new PessoasController();
 
         switch ($action) {
 
             case 'listar':
-                $pessoaController->listar();
+                $PessoasController->listar();
                 break;
 
             case 'buscar':
-                $pessoaController->buscarPorId();
+                $PessoasController->buscarPorId();
                 break;
 
             case 'criar':
-                $pessoaController->criar();
+                $PessoasController->criar();
                 break;
 
             case 'atualizar':
-                $pessoaController->atualizar();
+                $PessoasController->atualizar();
                 break;
-
-            case 'excluir':
-                $pessoaController->excluir();
+            case 'inativar':
+                $PessoasController->inativar();
                 break;
 
             default:
@@ -150,40 +166,33 @@ switch ($controller) {
 
         break;
 
-    case 'atendimento':
-
-        exigirAutenticao();
-
-        $atendimentoController = new AtendimentoController();
-
+    case 'atendimentos':
+        exigirAutenticacao();
+        require_once __DIR__
+            . '/app/Controllers/AtendimentosController.php';
+        $atendimentosController = new AtendimentosController();
         switch ($action) {
-
             case 'listar':
-                $atendimentoController->listar();
+                $atendimentosController->listar();
                 break;
-
-            case 'buscar':
-                $atendimentoController->buscarPorId();
+            case 'visualizar':
+                $atendimentosController->visualizar();
                 break;
-
             case 'criar':
-                $atendimentoController->criar();
+                $atendimentosController->criar();
                 break;
-
-            case 'atualizar':
-                $atendimentoController->atualizar();
+            case 'alterarStatus':
+            case 'atualizarStatus':
+                $atendimentosController->atualizarStatus();
                 break;
-
-            case 'excluir':
-                $atendimentoController->excluir();
+            case 'opcoesFormulario':
+                $atendimentosController->opcoesFormulario();
                 break;
-
             default:
-                http_response_code(404);
-                echo 'Ação de atendimentos não encontrada';
-                break;
+                responderRotaNaoEncontrada(
+                    'Ação de atendimentos não encontrada.'
+                );
         }
-
         break;
 
     default:
